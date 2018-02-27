@@ -1,2 +1,2 @@
 # otus-js-homework
-OTUS JS Homework
+Alexander Ponomarenko OTUS JS Homework
