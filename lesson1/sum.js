@@ -3,7 +3,7 @@ console.log('=== sum() ===');
 const sum = (function() {
     var s = 0;
     const sum2 = function(param) {
-        if (typeof param === 'undefined') {
+        if (arguments.length === 0) {
             return s;
         }
         else {
