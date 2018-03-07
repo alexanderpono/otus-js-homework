@@ -12,8 +12,6 @@ function getPath(aObj) {
         if (currentNode.localName === 'body') {
             break;
         };
-        let childIndex = getChildIndex(currentNode);
-        let parent = currentNode.parentNode;
         let pathItem = getPathItem(currentNode);
         path.push(pathItem);
     }
@@ -26,13 +24,9 @@ function getPath(aObj) {
 
 
 function getChildIndex(child) {
-    var index=1;
-    while (child.previousSibling) {
-        child = child.previousSibling;
-        if (child.nodeType === 1){
-            index++;
-        };
-    };
+    var children = Array.from(child.parentNode.children);
+    let index = children.indexOf(child) + 1;
+
     return index;
 }
 
