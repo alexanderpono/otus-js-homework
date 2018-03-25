@@ -1,0 +1,17 @@
+{
+  "name": "rss",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rss.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node rss.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.0.5",
+    "xml2js": "^0.4.19"
+  }
+}
