@@ -28,23 +28,24 @@
 import Slider from './Slider.vue'
 import CheckBox from './CheckBox.vue'
 import AppMenu from './Menu.vue'
+import appState from '@/state'
 
 export default {
     name: 'Settings',
     data () {
         return {
             msg: 'SETTINGS',
-            length: 6,
-            difficulty: 5,
-            sum: false,
-            sub: false,
-            mul: false,
-            div: false,
-            pwr: false,
-            day: 23,
-            lastSolved: 10,
-            lastTotal: 25,
-            accuracy: 80
+            length: appState.getVal('length'),
+            difficulty: appState.getVal('difficulty'),
+            sum: appState.getVal('sum'),
+            sub: appState.getVal('sub'),
+            mul: appState.getVal('mul'),
+            div: appState.getVal('div'),
+            pwr: appState.getVal('pwr'),
+            day: appState.getVal('day'),
+            lastSolved: appState.getVal('lastSolved'),
+            lastTotal: appState.getVal('lastTotal'),
+            accuracy: appState.getVal('accuracy')
         }
     },
     methods: {
@@ -52,8 +53,8 @@ export default {
             this.$router.push('/game/')
         },
         onParamChanged: function (paramName, val) {
-            console.log('onParamChanged()! paramName=', paramName, ' val=', val)
             this[paramName] = val
+            appState.setVal(paramName, val)
         }
     },
     components: {
