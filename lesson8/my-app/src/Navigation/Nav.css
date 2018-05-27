@@ -1,0 +1,31 @@
+.Nav {
+    background: grey;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.Nav ul {
+    margin: 15px 0px 15px 20px;
+    padding: 0px;
+}
+
+.Nav li {
+    display: block;
+    float: left;
+    padding: 0px 20px 0px 0px;
+}
+
+.Nav a {
+    color: #61DAFB;
+}
+
+.Nav a:active {
+    color: green;
+}
+
+.Nav a:hover {
+    color: white;
+}
+
