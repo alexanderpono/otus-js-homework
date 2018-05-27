@@ -1,0 +1,21 @@
+.settings {
+    height:230px;
+
+    font: 12px/1.1 Verdana, Arial, Helvetica, sans-serif;
+    text-align: left;
+}
+
+p {
+    padding: 0px 10px 0px 10px;
+}
+
+
+.halfSize {
+    width: 200px;
+}
+
+.container {
+    width: 700px;
+    margin: 20px 0px 0px 50px;
+}
+

@@ -1,0 +1,34 @@
+
+.dictionary {
+    height:230px;
+
+    font: 12px/1.1 Verdana, Arial, Helvetica, sans-serif;
+    text-align: left;
+}
+
+.dictionary p {
+    padding: 0px 10px 0px 10px;
+}
+
+.dictionary .date {
+    color: grey;
+}
+
+.dictionary .scroller {
+    width: 700px;
+    height:130px;
+    overflow: auto;
+    margin: 0 auto;
+}
+
+.dictionary .halfSize {
+    width: 200px;
+}
+
+input[type=button] {
+    margin-top: 20px;
+}
+
+.mar1 {
+    margin: 10px 0px 0px 50px;
+}
