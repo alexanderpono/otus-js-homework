@@ -4,17 +4,18 @@
             4 Мая 2017
         </p>
 
-        <p>to apply - добавлять</p>
-        <p>education - образование</p>
-        <p>to go - идти</p>
-        <p>responsible - ответственный</p>
-        <p>to apply - добавлять</p>
-        <p>education - образование</p>
-        <p>to go - идти</p>
-        <p>responsible - ответственный</p>
+        <p *ngFor="let item of data">{{item.en}} - {{item.ru}}</p>
 
     </div>
 
-    <button mat-raised-button color="primary" class="halfSize mar1">Add new</button>
+    <div class="mar1">
+        <span>1. Type in an English word:</span> <input type="text" value="{{srcWord}}" id="englishWord">
+        <button mat-raised-button color="primary" (click)="onGetTranslation()">2. Get translation</button>
+        <input type="text" value="{{translation}}" id="translation">
+    </div>
 
+    <div>
+        <button mat-raised-button color="primary" class="halfSize mar1" (click)="onAddNew()">3. Add word and translation</button>
+        <a href="http://translate.yandex.com/" class="YTranslate">Powered by Yandex.Translate</a>
+    </div>
 </div>

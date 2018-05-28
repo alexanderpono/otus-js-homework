@@ -10,7 +10,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-
+import { LocalStorageModule } from 'angular-2-local-storage';
 
 @NgModule({
     declarations: [
@@ -26,7 +26,8 @@ import {MatSelectModule} from '@angular/material/select';
         MatTabsModule,
         BrowserAnimationsModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
+        LocalStorageModule
     ],
     providers: [],
     bootstrap: [AppComponent]

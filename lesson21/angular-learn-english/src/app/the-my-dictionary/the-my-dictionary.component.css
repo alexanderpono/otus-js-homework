@@ -18,7 +18,7 @@
     width: 700px;
     height:130px;
     overflow: auto;
-    margin: 0 auto;
+    margin: 0 0 0 40px;
 }
 
 .dictionary .halfSize {
@@ -31,4 +31,16 @@ input[type=button] {
 
 .mar1 {
     margin: 10px 0px 0px 50px;
+}
+
+#englishWord {
+    margin: 0px 10px 0px 10px;
+}
+
+#translation {
+    margin: 0px 10px 0px 10px;
+}
+
+.YTranslate {
+    margin: 0px 0px 0px 10px;
 }
