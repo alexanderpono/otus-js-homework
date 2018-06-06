@@ -1,38 +1,47 @@
 var fs = require('fs');
-var argv = require('optimist').argv;
 var path = require('path');
 
 console.log('run me with parameters:');
 console.log('$ npm run tree -- --folder=foo');
 console.log('$ node tree --folder=foo');
 
-let dirName = './';
-if (typeof argv.folder != "undefined") {
-    dirName = argv.folder;
-}
+let dirName = getFolderToProcess();
 
 let resultDirs = [];
 let resultFiles = [];
 let processedDirs = [];
 
-var p = new Promise((resolve2, fail2) => {
+var p = new Promise((filesAndFoldersListReady) => {
+    const ErrDirIsNotProcessed = {
+        code: 'DIR_IS_NOT_PROCESSED'
+    };
     function allDirsAreProcessed() {
-        for (let key in resultDirs) {
-            let dirName = resultDirs[key];
-            if (processedDirs.indexOf(dirName) == -1) {
-                return false;
-            }
+        let allDirsAreProcessed = true;
+        try {
+            resultDirs.forEach(function(dirName) {
+                if (!processedDirs.includes(dirName)) {
+                    throw ErrDirIsNotProcessed;
+                };
+            });
         }
-        return true;
+        catch (err) {
+            allDirsAreProcessed = false;
+        };
+        return allDirsAreProcessed;
     }
 
-    function readDir(dirName2) {
-        return new Promise((resolve,b) => {
+    function readDir(dirName) {
+        return new Promise((resolve) => {
             let curDirs = [];
             let curFiles = [];
-            fs.readdir(dirName2, (err, files) => {
-                for (let key in files) {
-                    let fullPath = path.join(dirName2, files[key]);
+            fs.readdir(dirName, (err, files) => {
+                if (err !== null) {
+                    console.log('err', err);
+                    return;
+                };
+
+                files.forEach(function(file) {
+                    let fullPath = path.join(dirName, file);
                     let isDir = fs.lstatSync(fullPath).isDirectory();
                     if (isDir) {
                         curDirs.push(fullPath);
@@ -40,25 +49,25 @@ var p = new Promise((resolve2, fail2) => {
                     else {
                         curFiles.push(fullPath);
                     };
-                };
-                resolve({dirs: curDirs, files: curFiles, dir: dirName2})
+
+                });
+                resolve({dirs: curDirs, files: curFiles, dir: dirName})
             });
         });
     }
 
-    function processResults(code)
+    function processResults(readDirData)
     {
-        let dir = code.dir;
-        processedDirs.push(dir);
+        processedDirs.push(readDirData.dir);
 
-        resultDirs = resultDirs.concat(code.dirs);
-        resultFiles= resultFiles.concat(code.files);
-        for (var i=0; i<code.dirs.length; i++) {
-            readDir(code.dirs[i]).then(processResults);
-        }
+        resultDirs = resultDirs.concat(readDirData.dirs);
+        resultFiles= resultFiles.concat(readDirData.files);
+        readDirData.dirs.forEach(function(dir) {
+            readDir(dir).then(processResults);
+        });
 
         if (allDirsAreProcessed()) {
-            resolve2({
+            filesAndFoldersListReady({
                 'files': resultFiles,
                 'folders' : resultDirs
             });
@@ -72,4 +81,18 @@ var p = new Promise((resolve2, fail2) => {
     console.log('\nresult.files=\n' + result.files.join("\n"));
     console.log('\nresult.folders=\n' + result.folders.join("\n"));
 });
+
+function getFolderToProcess()
+{
+    let folder = './';
+    process.argv.forEach(function (val, index, array) {
+        if (val.includes('--folder=')) {
+            let ar = val.split('=');
+            folder = ar[1];
+            folder = folder.trim();
+        };
+    });
+
+    return folder;
+}
 
