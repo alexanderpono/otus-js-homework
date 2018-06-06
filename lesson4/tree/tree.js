@@ -6,7 +6,6 @@ console.log('$ npm run tree -- --folder=foo');
 console.log('$ node tree --folder=foo');
 
 let dirName = getFolderToProcess();
-
 let resultDirs = [];
 let resultFiles = [];
 let processedDirs = [];
@@ -56,26 +55,28 @@ var p = new Promise((filesAndFoldersListReady) => {
         });
     }
 
-    function processResults(readDirData)
+    function scanDir(dirName)
     {
-        processedDirs.push(readDirData.dir);
+        readDir(dirName).then(function(readDirData){
+            processedDirs.push(readDirData.dir);
 
-        resultDirs = resultDirs.concat(readDirData.dirs);
-        resultFiles= resultFiles.concat(readDirData.files);
-        readDirData.dirs.forEach(function(dir) {
-            readDir(dir).then(processResults);
-        });
-
-        if (allDirsAreProcessed()) {
-            filesAndFoldersListReady({
-                'files': resultFiles,
-                'folders' : resultDirs
+            resultDirs = resultDirs.concat(readDirData.dirs);
+            resultFiles= resultFiles.concat(readDirData.files);
+            readDirData.dirs.forEach(function(dir) {
+                scanDir(dir);
             });
-        }
+
+            if (allDirsAreProcessed()) {
+                filesAndFoldersListReady({
+                    'files': resultFiles,
+                    'folders' : resultDirs
+                });
+            }
+        });
     }
 
     resultDirs.push(dirName);
-    readDir(dirName).then(processResults);
+    scanDir(dirName);
 
 }).then((result) => {
     console.log('\nresult.files=\n' + result.files.join("\n"));
