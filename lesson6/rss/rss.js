@@ -2,11 +2,11 @@ const https = require('https');
 const xml2js = require('xml2js');
 const MongoClient = require('mongodb').MongoClient;
 
-var globals = {};
+const globals = {};
 
 readPromise('https://www.sports.ru/rss/rubric.xml?s=208')
     .then(
-        (xmlString)=>{return parseXmlPromise(xmlString);},
+        (xmlString)=>parseXmlPromise(xmlString),
         (err) => {console.log('readPromise() catch err=', err)}
     )
     .then(
@@ -19,10 +19,6 @@ readPromise('https://www.sports.ru/rss/rubric.xml?s=208')
     .then((client)=>{
         console.log('successfully opened db');
         return insertRssIntoDb(client);
-    })
-    .then((results) => {
-        console.log('closing db');
-        globals.client.close();
     })
     .catch((err)=>{
         console.log(err);
@@ -139,23 +135,32 @@ var xmlRecords = {
 function insertRssIntoDb(client) {
     globals.client = client;
     const db = client.db('test');
-    var rssRecords = db.collection("rssRecords");
+    let rssRecords = db.collection("rssRecords");
 
     let manyRecords = xmlRecords.itemsToDbFormat();
+    let countToInsert = 0;
 
-    var insertPromisesAr = [];
-    for (let i=0; i<manyRecords.length; i++) {
-        let recordToInsert = manyRecords[i];
-        insertPromisesAr.push(
-            rssRecords.insertOne(recordToInsert, function(err, result){
-                if(err){
-                    console.log('rssRecords.insertOne error=', err.message);
-                }
-                else {
-                    console.log('rssRecords.insertOne success=', result.ops[0]._id);
+    manyRecords.map(function(recordToInsert) {
+        countToInsert++;
+        rssRecords.insertOne(recordToInsert, function(err, result){
+            if(err){
+                console.log('rssRecords.insertOne error=', err.message);
+                countToInsert--;
+                if (countToInsert === 0) {
+                    console.log('insertRssIntoDb() closing db');
+                    client.close()
                 };
-            })
-        );
-    };
-    return Promise.all(insertPromisesAr);
+            }
+            else {
+                console.log('rssRecords.insertOne success=', result.ops[0]._id);
+                countToInsert--;
+                if (countToInsert === 0) {
+                    console.log('insertRssIntoDb() closing db');
+                    client.close()
+                };
+            };
+        })
+    });
+
+    return Promise.resolve(true);
 }
