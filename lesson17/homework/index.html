@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homework 17</title>
+    <link rel = "import" href = "https://polygit.org/components/polymer/polymer-element.html">
+</head>
+<body>
+
+
+<div id="container">
+</div>
+
+<script>
+    function createTree(scheme)
+    {
+        let id = scheme.id;
+        let tree = ((typeof scheme.items !== 'undefined') && (scheme.items.length > 0));
+        let nodeType = 'component-leaf';
+        if (tree) {
+            nodeType = 'component-tree';
+        };
+        const resultDomObj = document.createElement(nodeType);
+        resultDomObj.id = scheme.id;
+
+
+        if (tree) {
+            for (let i = 0; i < scheme.items.length; i++) {
+                let itemDomObj = createTree(scheme.items[i]);
+                resultDomObj.appendChild(itemDomObj);
+            }
+        }
+
+        return resultDomObj;
+    }
+
+    class Tree extends Polymer.Element
+    {
+        static get is()
+        {
+            return "component-tree";
+        }
+        constructor ()
+        {
+            super();
+        }
+        static get template() {
+            return `<div>I am a tree. My id=[[id]]</div>`
+        }
+    }
+    customElements.define(Tree.is, Tree);
+
+    class Leaf extends Polymer.Element
+    {
+        static get is()
+        {
+            return "component-leaf";
+        }
+        constructor ()
+        {
+            super();
+        }
+        static get template() {
+            return `<div>I am a leaf. My id=[[id]]</div>`
+        }
+    }
+    customElements.define(Leaf.is, Leaf);
+
+    let scheme = {
+        id:1,
+        items: [{
+            id:2,
+            items: [{ id:3 }]
+        }]
+    };
+
+    let treeDom = createTree(scheme);
+    console.log('treeDom=', treeDom);
+
+    let targetObj = document.getElementById('container');
+    targetObj.appendChild(treeDom);
+
+</script>
+
+
+</body>
+</html>
